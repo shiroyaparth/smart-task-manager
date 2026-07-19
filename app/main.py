@@ -1,18 +1,14 @@
-# from fastapi import FastAPI
-
-# app = FastAPI()
-
-# @app.get("/")
-# def read_root():
-#     return {"message": "Welcome to Smart Task Manager API"}
-
-# @app.get("/health")
-# def read_root1():
-#     return { "status": "ok" }
 from typing import Optional
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 app = FastAPI()
+
+
+class TaskCreate(BaseModel):
+    title: str
+    priority: str
+    completed: bool = False
 
 # Temporary in-memory data store.
 # This is NOT a database — it's just a Python list living in RAM.
@@ -43,3 +39,16 @@ def get_task(task_id: int):
         if task["id"] == task_id:
             return task
     raise HTTPException(status_code=404, detail="Task not found")
+
+
+@app.post("/tasks", status_code=201)
+def create_task(task: TaskCreate):
+    new_id = max((t["id"] for t in tasks), default=0) + 1
+    new_task = {
+        "id": new_id,
+        "title": task.title,
+        "priority": task.priority,
+        "completed": task.completed,
+    }
+    tasks.append(new_task)
+    return new_task
