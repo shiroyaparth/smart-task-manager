@@ -52,3 +52,35 @@ def create_task(task: TaskCreate):
     }
     tasks.append(new_task)
     return new_task
+
+
+@app.put("/tasks/{task_id}")
+def replace_task(task_id: int, task: TaskCreate):
+    for existing_task in tasks:
+        if existing_task["id"] == task_id:
+            existing_task["title"] = task.title
+            existing_task["priority"] = task.priority
+            existing_task["completed"] = task.completed
+            return existing_task
+    raise HTTPException(status_code=404, detail="Task not found")
+
+
+
+@app.patch("/tasks/{task_id}/complete")
+def complete_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+            task["completed"] = True
+            return task
+    raise HTTPException(status_code=404, detail="Task not found")
+
+
+@app.delete("/tasks/{task_id}", status_code=204)
+def delete_task(task_id: int):
+    for index, task in enumerate(tasks):
+        if task["id"] == task_id:
+            tasks.pop(index)
+            return
+    raise HTTPException(status_code=404, detail="Task not found")
+
+#aaj get post put patch delete sikh liyaaa
