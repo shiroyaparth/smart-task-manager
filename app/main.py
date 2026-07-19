@@ -9,7 +9,7 @@
 # @app.get("/health")
 # def read_root1():
 #     return { "status": "ok" }
-
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
@@ -31,7 +31,9 @@ def read_root():
 
 
 @app.get("/tasks")
-def get_tasks():
+def get_tasks(priority: Optional[str] = None):
+    if priority:
+        return [task for task in tasks if task["priority"] == priority]
     return tasks
 
 
