@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Smart Task Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>My Tasks</h1>
+
+    <form id="create-task-form">
+        <input type="text" id="new-title" placeholder="Task title" required>
+        <select id="new-priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        </select>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <input type="text" id="search-input" placeholder="Search tasks by title...">
+    <select id="priority-filter">
+        <option value="">All Priorities</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+
+    <p id="loading-message">Loading tasks...</p>
+    <p id="error-message" class="error"></p>
+    <div id="task-list"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
