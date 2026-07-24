@@ -2,21 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Smart Task Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to your Smart Task Manager workspace for seamless task tracking and team productivity.">
+    <title>Sign In — Smart Task Manager</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <h1>Login</h1>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.15) 0%, rgba(11, 15, 25, 1) 70%);">
 
-    <form id="login-form">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
+    <div class="glass-surface animate-slide-up" style="width: 100%; max-width: 420px; padding: var(--space-5); box-shadow: var(--shadow-lg), var(--shadow-glow);">
+        <!-- App Logo & Header -->
+        <div style="text-align: center; margin-bottom: var(--space-4);">
+            <div class="brand-icon" style="width: 48px; height: 48px; font-size: 1.5rem; margin: 0 auto var(--space-2); border-radius: var(--radius-lg);">✓</div>
+            <h1 style="font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary);">Welcome Back</h1>
+            <p style="font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-1);">Sign in to access your intelligent task workspace</p>
+        </div>
 
-    <p id="error-message" class="error"></p>
-    <p>Don't have an account? <a href="register.html">Register here</a></p>
+        <!-- Login Form -->
+        <form id="login-form" style="display: flex; flex-direction: column; gap: var(--space-2_5);">
+            <div class="form-group">
+                <label for="email" class="input-label">Email Address</label>
+                <div class="input-icon-wrapper">
+                    <span class="input-icon">✉</span>
+                    <input type="email" id="email" class="input-field" placeholder="name@company.com" required autocomplete="email">
+                </div>
+            </div>
 
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label for="password" class="input-label">Password</label>
+                </div>
+                <div class="input-icon-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" class="input-field" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+            </div>
+
+            <p id="error-message" class="input-error" style="min-height: 18px; text-align: center;"></p>
+
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: var(--space-1);">
+                <span>Sign In to Workspace</span>
+            </button>
+        </form>
+
+        <!-- Footer link -->
+        <p style="text-align: center; font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-4);">
+            Don't have an account? <a href="register.html" style="font-weight: 600; text-decoration: underline;">Create account</a>
+        </p>
+    </div>
+
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/login.js"></script>
 </body>
 </html>

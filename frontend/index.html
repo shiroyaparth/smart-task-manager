@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Task Manager — Production-grade task tracking and workspace manager.">
+    <title>Smart Task Manager — Production Workspace</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        if (localStorage.getItem("access_token")) {
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.2) 0%, rgba(11, 15, 25, 1) 80%);">
+
+    <div class="glass-surface animate-slide-up" style="max-width: 600px; width: 90%; padding: var(--space-6); text-align: center; box-shadow: var(--shadow-lg), var(--shadow-glow);">
+        <div class="brand-icon" style="width: 64px; height: 64px; font-size: 2rem; margin: 0 auto var(--space-3); border-radius: var(--radius-xl);">✓</div>
+        
+        <h1 style="font-size: var(--text-3xl); font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-2);">Smart Task Manager</h1>
+        
+        <p style="font-size: var(--text-base); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-5);">
+            A high-performance, dark-themed SaaS task workspace. Streamline team execution, track priority distribution, and hit deadlines faster.
+        </p>
+
+        <div style="display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap;">
+            <a href="login.html" class="btn btn-primary btn-lg" style="min-width: 150px;">Sign In</a>
+            <a href="register.html" class="btn btn-secondary btn-lg" style="min-width: 150px;">Create Account</a>
+        </div>
+    </div>
+
+</body>
+</html>
