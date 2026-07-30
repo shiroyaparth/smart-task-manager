@@ -1,10 +1,10 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Connection string: same 5 facts as Phase 4's psycopg2.connect(...),
 # just expressed as one URL string instead of separate keyword arguments.
-DATABASE_URL = "postgresql://postgres:parth2811@localhost:5432/smart_task_manager"
-
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:parth2811@localhost:5432/smart_task_manager")
 # Engine: knows HOW to connect to PostgreSQL, manages a pool of
 # reusable connections. Does NOT connect immediately — it's lazy.
 engine = create_engine(DATABASE_URL)
