@@ -81,3 +81,44 @@ def breakdown_task(task_title: str, user: models.User, db: Session) -> Dict[str,
             {"title": f"Final review of {task_title}", "priority": "low", "description": "Ensure quality completion."}
         ]
     }
+
+def parse_natural_language_task(nl_input: str, user: models.User, db: Session) -> Dict[str, Any]:
+    """
+    Parses freeform text like "Tomorrow 6 PM Gym" or "Urgent bugfix" into structured task fields.
+    """
+    if not provider.OPENROUTER_API_KEY:
+        # Fallback parsing heuristics for test mode
+        lower = nl_input.lower()
+        priority = "high" if any(w in lower for w in ["urgent", "high", "asap", "important"]) else ("low" if "low" in lower else "medium")
+        return {
+            "title": nl_input.strip(),
+            "priority": priority,
+            "description": f"Parsed from natural language input: '{nl_input}'"
+        }
+
+    user_ctx = context.build_user_context(user, db)
+    formatted_ctx = context.format_context_for_prompt(user_ctx)
+
+    messages = [
+        {"role": "system", "content": f"{prompts.PARSE_TASK_PROMPT}\n\n=== USER CONTEXT ===\n{formatted_ctx}"},
+        {"role": "user", "content": f"Parse task: {nl_input}"}
+    ]
+
+    res = provider.generate(messages, json_mode=True)
+    content = res.get("content", "{}")
+    try:
+        parsed = parser.parse_json_response(content)
+        if "title" in parsed:
+            return {
+                "title": parsed.get("title", nl_input),
+                "priority": parsed.get("priority", "medium"),
+                "description": parsed.get("description", "")
+            }
+    except Exception:
+        pass
+
+    return {
+        "title": nl_input.strip(),
+        "priority": "medium",
+        "description": ""
+    }

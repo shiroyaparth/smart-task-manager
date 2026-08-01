@@ -224,4 +224,19 @@ def ai_breakdown(
     result = assistant.breakdown_task(title, current_user, db)
     return result
 
+
+@app.post("/ai/parse-task")
+def ai_parse_task(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    text = payload.get("text", "")
+    if not text:
+        raise HTTPException(status_code=400, detail="Text input is required.")
+    parsed = assistant.parse_natural_language_task(text, current_user, db)
+    return parsed
+
+
 

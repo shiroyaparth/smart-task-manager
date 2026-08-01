@@ -36,11 +36,21 @@ async function sendAIMessage() {
   const prompt = input.value.trim();
   if (!prompt) return;
 
-  // Check if prompt is a breakdown command e.g. "breakdown: Build portfolio website"
-  if (prompt.toLowerCase().startsWith("breakdown:") || prompt.toLowerCase().startsWith("break down ")) {
+  const lower = prompt.toLowerCase();
+
+  // Feature 4 Breakdown command match
+  if (lower.startsWith("breakdown:") || lower.startsWith("break down ")) {
     const taskTitle = prompt.replace(/^breakdown:\s*/i, '').replace(/^break down\s*/i, '');
     input.value = '';
     requestTaskBreakdown(taskTitle);
+    return;
+  }
+
+  // Feature 5 Natural Language creation command match
+  if (lower.startsWith("add task:") || lower.startsWith("create task:") || lower.startsWith("remind me to ") || lower.startsWith("schedule ")) {
+    const nlText = prompt.replace(/^(add task:|create task:|remind me to|schedule)\s*/i, '');
+    input.value = '';
+    parseAndCreateNLTask(nlText);
     return;
   }
 
@@ -187,6 +197,64 @@ function renderBreakdownResponse(data) {
   bubble.innerHTML = html;
   messagesList.appendChild(bubble);
   autoScrollAIChat();
+}
+
+async function parseAndCreateNLTask(nlText) {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble chat-bubble-user';
+  userBubble.textContent = `Create task: "${nlText}"`;
+  messagesList.appendChild(userBubble);
+  autoScrollAIChat();
+
+  const typingIndicator = document.createElement('div');
+  typingIndicator.className = 'ai-typing-indicator';
+  typingIndicator.innerHTML = '<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
+  messagesList.appendChild(typingIndicator);
+  autoScrollAIChat();
+
+  try {
+    // Step 1: Parse natural text to structured task fields
+    const parseRes = await authFetch("/ai/parse-task", {
+      method: "POST",
+      body: JSON.stringify({ text: nlText }),
+    });
+
+    typingIndicator.remove();
+
+    if (!parseRes.ok) {
+      appendAIBubble("Could not parse task details.", true);
+      return;
+    }
+
+    const taskFields = await parseRes.json();
+
+    // Step 2: Reuse existing POST /tasks creation logic
+    const createRes = await authFetch("/tasks", {
+      method: "POST",
+      body: JSON.stringify({
+        title: taskFields.title,
+        priority: taskFields.priority || "medium",
+        description: taskFields.description || null
+      }),
+    });
+
+    if (!createRes.ok) {
+      appendAIBubble("Failed to insert parsed task into database.", true);
+      return;
+    }
+
+    const createdTask = await createRes.json();
+    appendAIBubble(`✅ **Task Created!**\n\n- **Title:** ${createdTask.title}\n- **Priority:** ${createdTask.priority}\n${createdTask.description ? `- **Notes:** ${createdTask.description}` : ''}`);
+
+    if (typeof showToast === 'function') showToast(`Task "${createdTask.title}" created via AI!`, 'success');
+    if (typeof loadTasks === 'function') loadTasks();
+  } catch (err) {
+    typingIndicator.remove();
+    appendAIBubble("Error processing natural language task creation.", true);
+  }
 }
 
 async function insertSubtaskToWorkspace(title, priority, description, btnEl) {

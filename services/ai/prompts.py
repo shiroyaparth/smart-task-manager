@@ -36,3 +36,16 @@ You MUST return ONLY valid JSON matching this exact structure:
 }
 Do not include any extra explanatory conversational text outside the JSON object.
 """
+
+PARSE_TASK_PROMPT = """You are an AI Natural Language Task Parser.
+Extract clean, structured task fields from freeform user input (e.g. "Tomorrow 6 PM Gym", "Urgent bug fix for auth").
+
+OUTPUT REQUIREMENT:
+Return ONLY valid JSON with this exact structure:
+{
+  "title": "Clean Task Title",
+  "priority": "high" | "medium" | "low",
+  "description": "Inferred date/time or details, or null"
+}
+Do not output markdown code blocks or extra text.
+"""
