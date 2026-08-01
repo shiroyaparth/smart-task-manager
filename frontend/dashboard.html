@@ -538,9 +538,36 @@
         </div>
     </div>
 
+    <!-- AI Assistant Floating Action Button -->
+    <button class="ai-fab" onclick="toggleAIPanel()" title="Ask AI Assistant">
+        <span style="font-size: 1.4rem;">✨</span>
+    </button>
+
+    <!-- AI Assistant Slide-in Panel -->
+    <div id="ai-chat-panel" class="ai-panel">
+        <div class="ai-panel-header">
+            <div class="ai-panel-title">
+                <span>✨ AI Assistant</span>
+                <span class="ai-badge">Copilot</span>
+            </div>
+            <button class="modal-close" onclick="toggleAIPanel()">&times;</button>
+        </div>
+        <div id="ai-messages-list" class="ai-messages-list">
+            <div class="chat-bubble chat-bubble-assistant">
+                <p>Hello! I am your AI Assistant shell. Send me any questions or task commands to test!</p>
+            </div>
+        </div>
+        <div class="ai-input-container">
+            <textarea id="ai-input" class="ai-input-field" placeholder="Ask AI Assistant... (Enter to send)" rows="1"></textarea>
+            <button class="btn btn-primary btn-icon" onclick="sendAIMessage()" style="border-radius: var(--radius-md);">➤</button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/ui.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/ai.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>
+

@@ -185,3 +185,15 @@ def delete_task(
 
     db.delete(task)
     db.commit()
+
+
+@app.post("/ai/chat")
+def ai_chat(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    prompt = payload.get("prompt", "")
+    reply = assistant.process_chat_message(prompt, current_user, db)
+    return {"response": reply}
