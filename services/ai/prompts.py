@@ -18,3 +18,21 @@ RULES:
    - 📋 **Suggested Action Sequence**
 4. If there are no pending tasks, congratulate the user and suggest planning future goals.
 """
+
+BREAKDOWN_SYSTEM_PROMPT = """You are an AI Task Breakdown Specialist.
+Decompose the given task goal into 3 to 5 clear, logical, actionable subtasks.
+
+OUTPUT REQUIREMENT:
+You MUST return ONLY valid JSON matching this exact structure:
+{
+  "task_title": "Original Task Title",
+  "subtasks": [
+    {
+      "title": "Actionable Subtask 1",
+      "priority": "high" | "medium" | "low",
+      "description": "Short explanation of what to do"
+    }
+  ]
+}
+Do not include any extra explanatory conversational text outside the JSON object.
+"""

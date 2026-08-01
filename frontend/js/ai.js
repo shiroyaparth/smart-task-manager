@@ -36,6 +36,14 @@ async function sendAIMessage() {
   const prompt = input.value.trim();
   if (!prompt) return;
 
+  // Check if prompt is a breakdown command e.g. "breakdown: Build portfolio website"
+  if (prompt.toLowerCase().startsWith("breakdown:") || prompt.toLowerCase().startsWith("break down ")) {
+    const taskTitle = prompt.replace(/^breakdown:\s*/i, '').replace(/^break down\s*/i, '');
+    input.value = '';
+    requestTaskBreakdown(taskTitle);
+    return;
+  }
+
   // Render User Bubble
   const userBubble = document.createElement('div');
   userBubble.className = 'chat-bubble chat-bubble-user';
@@ -109,6 +117,100 @@ async function requestAICoach(queryText = "What should I work on today?") {
   } catch (err) {
     typingIndicator.remove();
     appendAIBubble("Network error while connecting to AI Coach.", true);
+  }
+}
+
+async function requestTaskBreakdown(taskTitle) {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble chat-bubble-user';
+  userBubble.textContent = `Breakdown task: "${taskTitle}"`;
+  messagesList.appendChild(userBubble);
+
+  autoScrollAIChat();
+
+  const typingIndicator = document.createElement('div');
+  typingIndicator.className = 'ai-typing-indicator';
+  typingIndicator.innerHTML = '<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
+  messagesList.appendChild(typingIndicator);
+  autoScrollAIChat();
+
+  try {
+    const response = await authFetch("/ai/breakdown", {
+      method: "POST",
+      body: JSON.stringify({ title: taskTitle }),
+    });
+
+    typingIndicator.remove();
+
+    if (!response.ok) {
+      appendAIBubble("Error decomposing task.", true);
+      return;
+    }
+
+    const data = await response.json();
+    renderBreakdownResponse(data);
+  } catch (err) {
+    typingIndicator.remove();
+    appendAIBubble("Network error during task breakdown.", true);
+  }
+}
+
+function renderBreakdownResponse(data) {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble chat-bubble-assistant';
+
+  let html = `<p><strong>🔨 Breakdown for "${escapeHTML(data.task_title)}":</strong></p>`;
+  html += `<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">`;
+
+  data.subtasks.forEach((sub, idx) => {
+    html += `
+      <div style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--radius-sm); font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <strong style="color: var(--text-primary);">${idx + 1}. ${escapeHTML(sub.title)}</strong>
+          <span class="badge ${sub.priority === 'high' ? 'badge-high' : 'badge-medium'}">${sub.priority}</span>
+        </div>
+        ${sub.description ? `<p style="color: var(--text-secondary); margin-bottom: 6px; font-size: 11px;">${escapeHTML(sub.description)}</p>` : ''}
+        <button class="btn btn-primary btn-sm" style="font-size: 11px; padding: 2px 8px;" onclick="insertSubtaskToWorkspace('${escapeHTML(sub.title).replace(/'/g, "\\'")}', '${sub.priority}', '${escapeHTML(sub.description || '').replace(/'/g, "\\'")}', this)">
+          ➕ Add to Workspace
+        </button>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  bubble.innerHTML = html;
+  messagesList.appendChild(bubble);
+  autoScrollAIChat();
+}
+
+async function insertSubtaskToWorkspace(title, priority, description, btnEl) {
+  try {
+    const response = await authFetch("/tasks", {
+      method: "POST",
+      body: JSON.stringify({ title, priority, description }),
+    });
+
+    if (!response.ok) {
+      if (typeof showToast === 'function') showToast("Failed to create subtask.", 'error');
+      return;
+    }
+
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = "✓ Added";
+      btnEl.className = "btn btn-secondary btn-sm";
+    }
+
+    if (typeof showToast === 'function') showToast(`Added subtask "${title}" to tasks!`, 'success');
+    if (typeof loadTasks === 'function') loadTasks();
+  } catch (e) {
+    if (typeof showToast === 'function') showToast("Error adding subtask.", 'error');
   }
 }
 

@@ -209,4 +209,19 @@ def ai_coach(
     query = payload.get("query") if payload else None
     advice = assistant.get_productivity_coaching(current_user, db, query)
     return {"response": advice}
+
+
+@app.post("/ai/breakdown")
+def ai_breakdown(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    title = payload.get("title", "")
+    if not title:
+        raise HTTPException(status_code=400, detail="Task title is required for breakdown.")
+    result = assistant.breakdown_task(title, current_user, db)
+    return result
+
 

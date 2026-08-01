@@ -1,7 +1,7 @@
 from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 from app import models
-from services.ai import provider, context, prompts
+from services.ai import provider, context, prompts, parser
 
 def process_chat_message(user_message: str, user: models.User, db: Session) -> str:
     """
@@ -41,3 +41,43 @@ def get_productivity_coaching(user: models.User, db: Session, query: Optional[st
     ]
     res = provider.generate(messages)
     return res.get("content", "Could not generate coaching advice at this time.")
+
+def breakdown_task(task_title: str, user: models.User, db: Session) -> Dict[str, Any]:
+    """
+    Decomposes a task title into structured subtasks using JSON mode.
+    """
+    if not provider.OPENROUTER_API_KEY:
+        return {
+            "task_title": task_title,
+            "subtasks": [
+                {"title": f"Plan and scope: {task_title}", "priority": "high", "description": "Define initial requirements and deliverables."},
+                {"title": f"Implementation step 1 for {task_title}", "priority": "medium", "description": "Execute core logic and architecture."},
+                {"title": f"Review and verify {task_title}", "priority": "low", "description": "Run verification checks and complete task."}
+            ]
+        }
+
+    user_ctx = context.build_user_context(user, db)
+    formatted_ctx = context.format_context_for_prompt(user_ctx)
+
+    messages = [
+        {"role": "system", "content": f"{prompts.BREAKDOWN_SYSTEM_PROMPT}\n\n=== USER CONTEXT ===\n{formatted_ctx}"},
+        {"role": "user", "content": f"Decompose this task into subtasks: {task_title}"}
+    ]
+
+    res = provider.generate(messages, json_mode=True)
+    content = res.get("content", "{}")
+    try:
+        parsed = parser.parse_json_response(content)
+        if "subtasks" in parsed:
+            return parsed
+    except Exception:
+        pass
+
+    return {
+        "task_title": task_title,
+        "subtasks": [
+            {"title": f"Analyze requirements for {task_title}", "priority": "medium", "description": "Break down goal into steps."},
+            {"title": f"Execute core work for {task_title}", "priority": "high", "description": "Build primary deliverable."},
+            {"title": f"Final review of {task_title}", "priority": "low", "description": "Ensure quality completion."}
+        ]
+    }
