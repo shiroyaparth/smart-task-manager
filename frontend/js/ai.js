@@ -74,6 +74,44 @@ async function sendAIMessage() {
   }
 }
 
+async function requestAICoach(queryText = "What should I work on today?") {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble chat-bubble-user';
+  userBubble.textContent = queryText;
+  messagesList.appendChild(userBubble);
+
+  autoScrollAIChat();
+
+  const typingIndicator = document.createElement('div');
+  typingIndicator.className = 'ai-typing-indicator';
+  typingIndicator.innerHTML = '<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
+  messagesList.appendChild(typingIndicator);
+  autoScrollAIChat();
+
+  try {
+    const response = await authFetch("/ai/coach", {
+      method: "POST",
+      body: JSON.stringify({ query: queryText }),
+    });
+
+    typingIndicator.remove();
+
+    if (!response.ok) {
+      appendAIBubble("Error fetching coaching advice.", true);
+      return;
+    }
+
+    const data = await response.json();
+    appendAIBubble(data.response || "No coaching advice generated.");
+  } catch (err) {
+    typingIndicator.remove();
+    appendAIBubble("Network error while connecting to AI Coach.", true);
+  }
+}
+
 function appendAIBubble(text, isError = false) {
   const messagesList = document.getElementById('ai-messages-list');
   if (!messagesList) return;

@@ -554,13 +554,19 @@
         </div>
         <div id="ai-messages-list" class="ai-messages-list">
             <div class="chat-bubble chat-bubble-assistant">
-                <p>Hello! I am your AI Assistant shell. Send me any questions or task commands to test!</p>
+                <p>Hello! I am your AI Productivity Coach. Ask me what to work on today or send any prompt!</p>
             </div>
+        </div>
+        <div style="padding: 6px 16px; background: var(--sidebar); border-top: 1px solid var(--border);">
+            <button class="btn btn-secondary btn-sm" onclick="requestAICoach()" style="width: 100%; font-size: 12px; justify-content: center;">
+                💡 What should I work on today?
+            </button>
         </div>
         <div class="ai-input-container">
             <textarea id="ai-input" class="ai-input-field" placeholder="Ask AI Assistant... (Enter to send)" rows="1"></textarea>
             <button class="btn btn-primary btn-icon" onclick="sendAIMessage()" style="border-radius: var(--radius-md);">➤</button>
         </div>
+
     </div>
 
     <!-- Scripts -->

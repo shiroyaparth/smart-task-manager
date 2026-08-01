@@ -196,4 +196,17 @@ def ai_chat(
     from services.ai import assistant
     prompt = payload.get("prompt", "")
     reply = assistant.process_chat_message(prompt, current_user, db)
-    return {"response": reply}
+    return {"response": reply}
+
+
+@app.post("/ai/coach")
+def ai_coach(
+    payload: Optional[dict] = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    query = payload.get("query") if payload else None
+    advice = assistant.get_productivity_coaching(current_user, db, query)
+    return {"response": advice}
+
