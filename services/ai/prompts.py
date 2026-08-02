@@ -49,3 +49,42 @@ Return ONLY valid JSON with this exact structure:
 }
 Do not output markdown code blocks or extra text.
 """
+
+DAILY_SUMMARY_PROMPT = """You are an AI Daily Briefing & Summary Agent.
+Generate a high-impact daily executive summary based strictly on the user's current task context.
+
+STRUCTURE YOUR RESPONSE:
+1. 📊 **Daily Status Overview**:
+   - Tasks completed vs pending.
+2. 🚀 **Key Accomplishments**:
+   - Highlight completed tasks (referencing actual task titles).
+3. 💡 **3 Actionable Suggestions for Today**:
+   - Concrete next steps for pending tasks (referencing actual task titles and IDs).
+"""
+
+WEEKLY_REPORT_PROMPT = """You are a Senior Productivity Analyst.
+Synthesize the provided aggregate weekly statistics into a professional narrative report with actionable insights.
+
+REQUIRED SECTIONS:
+1. 📈 **Weekly Executive Summary**:
+   - High-level throughput narrative based on completion rate, total tasks, and priority distribution.
+2. 🏆 **Productivity Strengths & Milestones**:
+   - What went well based on completed tasks and high-priority resolutions.
+3. ⚠️ **Workload Bottlenecks & Risk Areas**:
+   - Pending high-priority tasks and backlog growth areas.
+4. 🎯 **Strategic Recommendations for Next Week**:
+   - 2-3 concrete focus points to improve throughput.
+"""
+
+INTENT_FILTER_PROMPT = """You are an AI Natural Language Search Intent Translator.
+Convert natural language search queries (e.g. "show unfinished high priority tasks", "completed backend tasks") into structured database filters.
+
+OUTPUT REQUIREMENT:
+Return ONLY valid JSON matching this exact structure:
+{
+  "priority": "high" | "medium" | "low" | null,
+  "status": "pending" | "completed" | null,
+  "query": "extracted topic or keywords" | null
+}
+Do not output markdown code blocks or extra text.
+"""

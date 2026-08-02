@@ -239,4 +239,42 @@ def ai_parse_task(
     return parsed
 
 
+@app.get("/ai/daily-summary")
+def ai_daily_summary(
+    force_refresh: bool = False,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    summary = assistant.generate_daily_summary(current_user, db, force_refresh)
+    return {"response": summary}
+
+
+@app.get("/ai/weekly-report")
+def ai_weekly_report(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    report = assistant.generate_weekly_report(current_user, db)
+    return {"response": report}
+
+
+@app.post("/ai/search-intent")
+def ai_search_intent(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    from services.ai import assistant
+    query = payload.get("query", "")
+    if not query:
+        raise HTTPException(status_code=400, detail="Search query is required.")
+    filters = assistant.parse_search_intent(query, current_user, db)
+    return filters
+
+
+
+
+
 

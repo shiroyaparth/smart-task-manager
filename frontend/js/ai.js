@@ -54,6 +54,14 @@ async function sendAIMessage() {
     return;
   }
 
+  // Feature 8 Natural Language Search / Intent match
+  if (lower.startsWith("search:") || lower.startsWith("find ") || lower.startsWith("show ") || lower.startsWith("filter ")) {
+    const searchQuery = prompt.replace(/^(search:|find|show|filter)\s*/i, '');
+    input.value = '';
+    parseAISearchIntent(searchQuery);
+    return;
+  }
+
   // Render User Bubble
   const userBubble = document.createElement('div');
   userBubble.className = 'chat-bubble chat-bubble-user';
@@ -127,6 +135,74 @@ async function requestAICoach(queryText = "What should I work on today?") {
   } catch (err) {
     typingIndicator.remove();
     appendAIBubble("Network error while connecting to AI Coach.", true);
+  }
+}
+
+async function requestDailySummary(forceRefresh = false) {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble chat-bubble-user';
+  userBubble.textContent = "📅 Generate Daily Summary";
+  messagesList.appendChild(userBubble);
+
+  autoScrollAIChat();
+
+  const typingIndicator = document.createElement('div');
+  typingIndicator.className = 'ai-typing-indicator';
+  typingIndicator.innerHTML = '<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
+  messagesList.appendChild(typingIndicator);
+  autoScrollAIChat();
+
+  try {
+    const response = await authFetch(`/ai/daily-summary?force_refresh=${forceRefresh}`);
+    typingIndicator.remove();
+
+    if (!response.ok) {
+      appendAIBubble("Error generating daily summary.", true);
+      return;
+    }
+
+    const data = await response.json();
+    appendAIBubble(data.response || "No summary available.");
+  } catch (err) {
+    typingIndicator.remove();
+    appendAIBubble("Network error fetching daily summary.", true);
+  }
+}
+
+async function requestWeeklyReport() {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble chat-bubble-user';
+  userBubble.textContent = "📈 Generate Weekly Productivity Report";
+  messagesList.appendChild(userBubble);
+
+  autoScrollAIChat();
+
+  const typingIndicator = document.createElement('div');
+  typingIndicator.className = 'ai-typing-indicator';
+  typingIndicator.innerHTML = '<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
+  messagesList.appendChild(typingIndicator);
+  autoScrollAIChat();
+
+  try {
+    const response = await authFetch('/ai/weekly-report');
+    typingIndicator.remove();
+
+    if (!response.ok) {
+      appendAIBubble("Error generating weekly report.", true);
+      return;
+    }
+
+    const data = await response.json();
+    appendAIBubble(data.response || "No report available.");
+  } catch (err) {
+    typingIndicator.remove();
+    appendAIBubble("Network error fetching weekly report.", true);
   }
 }
 
@@ -216,7 +292,6 @@ async function parseAndCreateNLTask(nlText) {
   autoScrollAIChat();
 
   try {
-    // Step 1: Parse natural text to structured task fields
     const parseRes = await authFetch("/ai/parse-task", {
       method: "POST",
       body: JSON.stringify({ text: nlText }),
@@ -231,7 +306,6 @@ async function parseAndCreateNLTask(nlText) {
 
     const taskFields = await parseRes.json();
 
-    // Step 2: Reuse existing POST /tasks creation logic
     const createRes = await authFetch("/tasks", {
       method: "POST",
       body: JSON.stringify({
@@ -255,6 +329,63 @@ async function parseAndCreateNLTask(nlText) {
     typingIndicator.remove();
     appendAIBubble("Error processing natural language task creation.", true);
   }
+}
+
+async function parseAISearchIntent(searchQuery) {
+  const messagesList = document.getElementById('ai-messages-list');
+  if (!messagesList) return;
+
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble chat-bubble-user';
+  userBubble.textContent = `Search intent: "${searchQuery}"`;
+  messagesList.appendChild(userBubble);
+  autoScrollAIChat();
+
+  const typingIndicator = document.createElement('div');
+  typingIndicator.className = 'ai-typing-indicator';
+  typingIndicator.innerHTML = '<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
+  messagesList.appendChild(typingIndicator);
+  autoScrollAIChat();
+
+  try {
+    const res = await authFetch("/ai/search-intent", {
+      method: "POST",
+      body: JSON.stringify({ query: searchQuery }),
+    });
+
+    typingIndicator.remove();
+
+    if (!res.ok) {
+      appendAIBubble("Failed to parse search intent.", true);
+      return;
+    }
+
+    const filterObj = await res.json();
+    applyStructuredFilterToWorkspace(filterObj, searchQuery);
+  } catch (err) {
+    typingIndicator.remove();
+    appendAIBubble("Network error parsing search intent.", true);
+  }
+}
+
+function applyStructuredFilterToWorkspace(filterObj, originalQuery) {
+  const prioritySelect = document.getElementById('priority-filter');
+  const statusSelect = document.getElementById('status-filter');
+  const searchInput = document.getElementById('search-input');
+
+  if (filterObj.priority && prioritySelect) {
+    prioritySelect.value = filterObj.priority;
+  }
+  if (filterObj.status && statusSelect) {
+    statusSelect.value = filterObj.status;
+  }
+  if (filterObj.query && searchInput) {
+    searchInput.value = filterObj.query;
+  }
+
+  appendAIBubble(`🔍 **Applied AI Filter Intent for "${escapeHTML(originalQuery)}":**\n- **Priority:** ${filterObj.priority || 'All'}\n- **Status:** ${filterObj.status || 'All'}\n- **Keyword:** ${filterObj.query || 'None'}`);
+
+  if (typeof loadTasks === 'function') loadTasks();
 }
 
 async function insertSubtaskToWorkspace(title, priority, description, btnEl) {
