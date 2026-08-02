@@ -1,15 +1,20 @@
 from datetime import datetime
 from typing import Optional
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import jwt
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from app import models, schemas, security
 from app.database import engine, get_db
 
+models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 import os
@@ -52,6 +57,14 @@ def get_current_user(
 def read_root():
     return {"message": "Welcome to Smart Task Manager API"}
 
+@app.get("/health")
+def health_check(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "connected"}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Database unavailable: {str(e)}")
+    
 
 @app.post("/register", response_model=schemas.UserResponse, status_code=201)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -277,4 +290,4 @@ def ai_search_intent(
 
 
 
-
+
