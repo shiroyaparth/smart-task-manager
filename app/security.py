@@ -12,8 +12,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY environment variable is not set")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
+ACCESS_TOKEN_EXPIRE_MINUTES = 10080  # 7 days
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
