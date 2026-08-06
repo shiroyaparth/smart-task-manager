@@ -553,10 +553,21 @@
             <button class="modal-close" onclick="toggleAIPanel()">&times;</button>
         </div>
         <div id="ai-messages-list" class="ai-messages-list">
-            <div class="chat-bubble chat-bubble-assistant">
-                <p>Hello! I am your AI Productivity Coach. Ask me what to work on today or send any prompt!</p>
-            </div>
+    <div class="chat-bubble chat-bubble-assistant">
+        <p>Hello! I am your AI Productivity Coach. Try one of these, or ask me anything:</p>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">
+            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'breakdown: Plan a birthday party'; document.getElementById('ai-input').focus();">
+                🔨 "breakdown: Plan a birthday party"
+            </button>
+            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'add task: Call the dentist tomorrow'; document.getElementById('ai-input').focus();">
+                ➕ "add task: Call the dentist tomorrow"
+            </button>
+            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'search: high priority pending'; document.getElementById('ai-input').focus();">
+                🔍 "search: high priority pending"
+            </button>
         </div>
+    </div>
+</div>
         <div style="padding: 6px 12px; background: var(--sidebar); border-top: 1px solid var(--border); display: flex; gap: 4px; flex-wrap: wrap;">
             <button class="btn btn-secondary btn-sm" onclick="requestAICoach()" style="flex: 1; font-size: 11px; justify-content: center; padding: 4px;">
                 💡 Coach
