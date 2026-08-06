@@ -555,19 +555,24 @@
         <div id="ai-messages-list" class="ai-messages-list">
     <div class="chat-bubble chat-bubble-assistant">
         <p>Hello! I am your AI Productivity Coach. Try one of these, or ask me anything:</p>
-        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">
-            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'breakdown: Plan a birthday party'; document.getElementById('ai-input').focus();">
-                🔨 "breakdown: Plan a birthday party"
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+            <button class="btn btn-secondary btn-sm" style="flex-direction: column; align-items: flex-start; font-size: 11px; padding: 8px;" onclick="document.getElementById('ai-input').value = 'breakdown: '; document.getElementById('ai-input').focus();">
+                <span>🔨 Break down a task</span>
+                <span style="font-size: 10px; color: var(--text-muted); font-weight: 400;">e.g. "breakdown: launch my website"</span>
             </button>
-            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'add task: Call the dentist tomorrow'; document.getElementById('ai-input').focus();">
-                ➕ "add task: Call the dentist tomorrow"
+            <button class="btn btn-secondary btn-sm" style="flex-direction: column; align-items: flex-start; font-size: 11px; padding: 8px;" onclick="document.getElementById('ai-input').value = 'add task: '; document.getElementById('ai-input').focus();">
+                <span>➕ Quickly add a task</span>
+                <span style="font-size: 10px; color: var(--text-muted); font-weight: 400;">e.g. "add task: call the dentist tomorrow"</span>
             </button>
-            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'search: high priority pending'; document.getElementById('ai-input').focus();">
-                🔍 "search: high priority pending"
+            <button class="btn btn-secondary btn-sm" style="flex-direction: column; align-items: flex-start; font-size: 11px; padding: 8px;" onclick="document.getElementById('ai-input').value = 'search: '; document.getElementById('ai-input').focus();">
+                <span>🔍 Search your tasks</span>
+                <span style="font-size: 10px; color: var(--text-muted); font-weight: 400;">e.g. "search: high priority pending"</span>
             </button>
         </div>
     </div>
-</div>
+<Question ID="1" Shortcut="chapter 1" Order="" ElementType="chapter" >
+<LongCaption></div></LongCaption>
+</Question>
         <div style="padding: 6px 12px; background: var(--sidebar); border-top: 1px solid var(--border); display: flex; gap: 4px; flex-wrap: wrap;">
             <button class="btn btn-secondary btn-sm" onclick="requestAICoach()" style="flex: 1; font-size: 11px; justify-content: center; padding: 4px;">
                 💡 Coach

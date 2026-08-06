@@ -1,0 +1,40 @@
+warning: in the working copy of 'frontend/dashboard.html', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/frontend/dashboard.html b/frontend/dashboard.html[m
+[1mindex 657f026..a0c7b08 100644[m
+[1m--- a/frontend/dashboard.html[m
+[1m+++ b/frontend/dashboard.html[m
+[36m@@ -552,21 +552,19 @@[m
+             </div>[m
+             <button class="modal-close" onclick="toggleAIPanel()">&times;</button>[m
+         </div>[m
+[31m-        <div id="ai-messages-list" class="ai-messages-list">[m
+[31m-    <div class="chat-bubble chat-bubble-assistant">[m
+[31m-        <p>Hello! I am your AI Productivity Coach. Try one of these, or ask me anything:</p>[m
+[31m-        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">[m
+[31m-            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'breakdown: Plan a birthday party'; document.getElementById('ai-input').focus();">[m
+[31m-                🔨 "breakdown: Plan a birthday party"[m
+[31m-            </button>[m
+[31m-            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'add task: Call the dentist tomorrow'; document.getElementById('ai-input').focus();">[m
+[31m-                ➕ "add task: Call the dentist tomorrow"[m
+[31m-            </button>[m
+[31m-            <button class="btn btn-secondary btn-sm" style="justify-content: flex-start; font-size: 11px;" onclick="document.getElementById('ai-input').value = 'search: high priority pending'; document.getElementById('ai-input').focus();">[m
+[31m-                🔍 "search: high priority pending"[m
+[31m-            </button>[m
+[31m-        </div>[m
+[31m-    </div>[m
+[32m+[m[32m        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">[m
+[32m+[m[32m    <button class="btn btn-secondary btn-sm" style="flex-direction: column; align-items: flex-start; font-size: 11px; padding: 8px;" onclick="document.getElementById('ai-input').value = 'breakdown: '; document.getElementById('ai-input').focus();">[m
+[32m+[m[32m        <span>🔨 Break down a task</span>[m
+[32m+[m[32m        <span style="font-size: 10px; color: var(--text-muted); font-weight: 400;">e.g. "breakdown: launch my website"</span>[m
+[32m+[m[32m    </button>[m
+[32m+[m[32m    <button class="btn btn-secondary btn-sm" style="flex-direction: column; align-items: flex-start; font-size: 11px; padding: 8px;" onclick="document.getElementById('ai-input').value = 'add task: '; document.getElementById('ai-input').focus();">[m
+[32m+[m[32m        <span>➕ Quickly add a task</span>[m
+[32m+[m[32m        <span style="font-size: 10px; color: var(--text-muted); font-weight: 400;">e.g. "add task: call the dentist tomorrow"</span>[m
+[32m+[m[32m    </button>[m
+[32m+[m[32m    <button class="btn btn-secondary btn-sm" style="flex-direction: column; align-items: flex-start; font-size: 11px; padding: 8px;" onclick="document.getElementById('ai-input').value = 'search: '; document.getElementById('ai-input').focus();">[m
+[32m+[m[32m        <span>🔍 Search your tasks</span>[m
+[32m+[m[32m        <span style="font-size: 10px; color: var(--text-muted); font-weight: 400;">e.g. "search: high priority pending"</span>[m
+[32m+[m[32m    </button>[m
+ </div>[m
+         <div style="padding: 6px 12px; background: var(--sidebar); border-top: 1px solid var(--border); display: flex; gap: 4px; flex-wrap: wrap;">[m
+             <button class="btn btn-secondary btn-sm" onclick="requestAICoach()" style="flex: 1; font-size: 11px; justify-content: center; padding: 4px;">[m
