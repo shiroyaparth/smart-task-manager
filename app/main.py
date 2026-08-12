@@ -56,13 +56,6 @@ def get_current_user(
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Smart Task Manager API"}
-
-@app.post("/admin/reset-tasks")
-def reset_tasks(db: Session = Depends(get_db)):
-    db.execute(text("ALTER TABLE tasks ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id)"))
-    db.execute(text("DELETE FROM tasks"))
-    db.commit()
-    return {"status": "user_id column added, tasks table cleared"}
     
 
 @app.post("/register", response_model=schemas.UserResponse, status_code=201)
