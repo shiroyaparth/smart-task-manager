@@ -57,19 +57,12 @@ def get_current_user(
 def read_root():
     return {"message": "Welcome to Smart Task Manager API"}
 
-@app.get("/health")
-def health_check(db: Session = Depends(get_db)):
-    try:
-        db.execute(text("SELECT 1"))
-        return {"status": "ok", "database": "connected"}
-    except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Database unavailable: {str(e)}")
-
 @app.post("/admin/reset-tasks")
 def reset_tasks(db: Session = Depends(get_db)):
+    db.execute(text("ALTER TABLE tasks ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id)"))
     db.execute(text("DELETE FROM tasks"))
     db.commit()
-    return {"status": "tasks table cleared"}
+    return {"status": "user_id column added, tasks table cleared"}
     
 
 @app.post("/register", response_model=schemas.UserResponse, status_code=201)
