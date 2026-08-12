@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, ForeignKey
 from sqlalchemy.sql import func
 
 from app.database import Base
@@ -14,6 +14,7 @@ class Task(Base):
     status = Column(String(20), default="pending")
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now())
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
 
 class User(Base):

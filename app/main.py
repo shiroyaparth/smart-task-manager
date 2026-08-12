@@ -64,6 +64,12 @@ def health_check(db: Session = Depends(get_db)):
         return {"status": "ok", "database": "connected"}
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Database unavailable: {str(e)}")
+
+@app.post("/admin/reset-tasks")
+def reset_tasks(db: Session = Depends(get_db)):
+    db.execute(text("DELETE FROM tasks"))
+    db.commit()
+    return {"status": "tasks table cleared"}
     
 
 @app.post("/register", response_model=schemas.UserResponse, status_code=201)
@@ -111,7 +117,7 @@ def get_tasks(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    query = db.query(models.Task)
+    query = db.query(models.Task).filter(models.Task.user_id == current_user.id)
     if priority:
         query = query.filter(models.Task.priority == priority)
     results = query.all()
@@ -124,7 +130,7 @@ def get_task(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    task = db.query(models.Task).filter(models.Task.id == task_id, models.Task.user_id == current_user.id).first()
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return task_to_dict(task)
@@ -140,6 +146,7 @@ def create_task(
         title=task.title,
         description=task.description,
         priority=task.priority,
+        user_id=current_user.id,
     )
     db.add(new_task)
     db.commit()
@@ -154,7 +161,7 @@ def replace_task(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    existing_task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    existing_task = db.query(models.Task).filter(models.Task.id == task_id, models.Task.user_id == current_user.id).first()
     if existing_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
 
@@ -174,7 +181,7 @@ def complete_task(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    task = db.query(models.Task).filter(models.Task.id == task_id, models.Task.user_id == current_user.id).first()
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
 
@@ -192,7 +199,7 @@ def delete_task(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    task = db.query(models.Task).filter(models.Task.id == task_id, models.Task.user_id == current_user.id).first()
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
 
