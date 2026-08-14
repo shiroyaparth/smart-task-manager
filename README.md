@@ -1,4 +1,4 @@
-# Smart Task Manager
+# TaskFlow AI
 [![Live frontent](https://img.shields.io/badge/demo-live-brightgreen)](https://smart-task-manager-nine-tau.vercel.app/)
 [![Live Backend](https://img.shields.io/badge/demo-live-brightgreen)](https://smart-task-manager-yqov.onrender.com)
 [![API Docs](https://img.shields.io/badge/API-Swagger-blue)](https://smart-task-manager-yqov.onrender.com/docs)
@@ -24,7 +24,8 @@ A full-stack task management application with an LLM-assisted productivity layer
 
 ## Overview
 
-Smart Task Manager is a personal task tracker with JWT authentication, per-user task ownership, and five AI-assisted workflows layered on conventional CRUD: a chat assistant, task breakdown, natural-language task entry, daily/weekly reporting, and natural-language search.
+TaskFlow AI is a personal task tracker with JWT authentication, per-user task ownership, and five AI-assisted workflows layered on conventional CRUD: a chat assistant, task breakdown, natural-language task entry, daily/weekly reporting, and natural-language search.
+
 
 The project ships as two independently deployable pieces:
 
@@ -151,14 +152,14 @@ Decisions made deliberately, with known limitations, rather than by default:
 | Authentication | JWT (PyJWT), bcrypt password hashing (passlib) |
 | AI Integration | OpenRouter (model-agnostic LLM gateway), default model `openai/gpt-3.5-turbo` |
 | Containerization | Docker, Docker Compose |
-| Deployment | Render (backend API) |
+| Deployment | Render |
 
 ---
 
 ## Project Structure
 
 ```text
-smart-task-manager/
+taskflow-ai/
 ├── app/
 │   ├── main.py          # FastAPI app, route handlers, JWT auth dependency
 │   ├── models.py         # SQLAlchemy models: User, Task
@@ -209,7 +210,7 @@ smart-task-manager/
 
 ```bash
 git clone https://github.com/shiroyaparth/smart-task-manager.git
-cd smart-task-manager
+cd taskflow-ai
 
 python -m venv venv
 source venv/bin/activate    # Windows: venv\Scripts\activate

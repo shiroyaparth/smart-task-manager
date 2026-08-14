@@ -55,7 +55,8 @@ def get_current_user(
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to Smart Task Manager API"}
+    return {"message": "Welcome to TaskFlow AI API"}
+
     
 
 @app.post("/register", response_model=schemas.UserResponse, status_code=201)

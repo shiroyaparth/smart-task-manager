@@ -1,6 +1,7 @@
 /* ==========================================================================
-   Smart Task Manager — Dashboard Core Application Controller
+   TaskFlow AI — Dashboard Core Application Controller
    ========================================================================== */
+
 
 const taskList = document.getElementById("task-list");
 const loadingMessage = document.getElementById("loading-message");

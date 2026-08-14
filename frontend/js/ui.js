@@ -1,6 +1,7 @@
 /* ==========================================================================
-   Smart Task Manager — Shared UI UX Engine (Toast, Modals, Shortcuts, Layout)
+   TaskFlow AI — Shared UI UX Engine (Toast, Modals, Shortcuts, Layout)
    ========================================================================== */
+
 
 // 1. Toast Notification System
 function showToast(message, type = 'info', duration = 3200) {

@@ -25,7 +25,8 @@ def generate(
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost:8000",
-        "X-Title": "Smart Task Manager AI",
+        "X-Title": "TaskFlow AI",
+
     }
     
     payload = {
