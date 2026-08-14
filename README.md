@@ -1,8 +1,8 @@
 # TaskFlow AI
-[![Live frontent](https://img.shields.io/badge/demo-live-brightgreen)](https://smart-task-manager-nine-tau.vercel.app/)
+[![Live frontent](https://img.shields.io/badge/demo-live-brightgreen)](https://taskflowaiweb.vercel.app/)
 [![Live Backend](https://img.shields.io/badge/demo-live-brightgreen)](https://smart-task-manager-yqov.onrender.com)
 [![API Docs](https://img.shields.io/badge/API-Swagger-blue)](https://smart-task-manager-yqov.onrender.com/docs)
-[![Repo](https://img.shields.io/badge/github-repo-black)](https://github.com/shiroyaparth/smart-task-manager)
+[![Repo](https://img.shields.io/badge/github-repo-black)](https://github.com/shiroyaparth/taskflow-ai)
 
 A full-stack task management application with an LLM-assisted productivity layer, built on FastAPI, PostgreSQL, and a vanilla JavaScript dashboard. Every AI feature is grounded in a server-built context of the user's real tasks (not free-floating chat) and degrades to a deterministic, rule-based response when no LLM provider key is configured — the app is fully usable with zero AI spend.
 
